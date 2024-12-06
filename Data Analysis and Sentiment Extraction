@@ -1,0 +1,15 @@
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+import pandas as pd
+
+# Load scraped data
+df = pd.read_csv('reddit_stocks_data.csv')
+
+# Initialize VADER sentiment analyzer
+analyzer = SentimentIntensityAnalyzer()
+
+# Add sentiment scores
+df['sentiment'] = df['title'].apply(lambda x: analyzer.polarity_scores(x)['compound'])
+
+# Save processed data
+df.to_csv('reddit_sentiment_data.csv', index=False)
+print("Sentiment analysis complete. Data saved to 'reddit_sentiment_data.csv'")
