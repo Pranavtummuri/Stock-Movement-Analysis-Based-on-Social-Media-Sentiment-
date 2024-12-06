@@ -1,0 +1,27 @@
+import praw
+import pandas as pd
+
+# Initialize Reddit API
+reddit = praw.Reddit(
+    client_id='YOUR_CLIENT_ID',
+    client_secret='YOUR_CLIENT_SECRET',
+    user_agent='YOUR_USER_AGENT'
+)
+
+# Scraping data from r/stocks subreddit
+subreddit = reddit.subreddit('stocks')
+posts = []
+
+for post in subreddit.top(limit=100):  # Scraping top 100 posts
+    posts.append({
+        'title': post.title,
+        'selftext': post.selftext,
+        'score': post.score,
+        'comments': post.num_comments,
+        'created_utc': post.created_utc
+    })
+
+# Convert to DataFrame
+df = pd.DataFrame(posts)
+df.to_csv('reddit_stocks_data.csv', index=False)
+print("Data saved to 'reddit_stocks_data.csv'")
